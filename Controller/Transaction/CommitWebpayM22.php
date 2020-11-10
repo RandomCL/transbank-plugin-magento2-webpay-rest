@@ -4,7 +4,7 @@ namespace Transbank\Webpay\Controller\Transaction;
 use Transbank\Webpay\Model\TransbankSdkWebpayRest;
 use Transbank\Webpay\Model\LogHandler;
 
-
+use Magento\Framework\Event\ManagerInterface as EventManager;
 use \Magento\Sales\Model\Order;
 use Transbank\Webpay\Model\WebpayOrderData;
 
@@ -23,6 +23,7 @@ class CommitWebpayM22 extends \Magento\Framework\App\Action\Action
         "NC" => "N cuotas sin interés",
     ];
     protected $configProvider;
+    protected $eventManager;
     
     public function __construct(
         \Magento\Framework\App\Action\Context $context, \Magento\Checkout\Model\Cart $cart,
@@ -30,7 +31,8 @@ class CommitWebpayM22 extends \Magento\Framework\App\Action\Action
         \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory,
         \Magento\Framework\Controller\Result\RawFactory $resultRawFactory,
         \Transbank\Webpay\Model\Config\ConfigProvider $configProvider,
-        \Transbank\Webpay\Model\WebpayOrderDataFactory $webpayOrderDataFactory
+        \Transbank\Webpay\Model\WebpayOrderDataFactory $webpayOrderDataFactory,
+        EventManager $eventManager
     ) {
         
         parent::__construct($context);
@@ -43,6 +45,7 @@ class CommitWebpayM22 extends \Magento\Framework\App\Action\Action
         $this->configProvider = $configProvider;
         $this->webpayOrderDataFactory = $webpayOrderDataFactory;
         $this->log = new LogHandler();
+        $this->eventManager = $eventManager;
     }
     
     /**
@@ -92,7 +95,9 @@ class CommitWebpayM22 extends \Magento\Framework\App\Action\Action
                     
                     $message = $this->getSuccessMessage($this->commitResponseToArray($transactionResult));
                     $this->messageManager->addSuccess(__($message));
-                    
+
+                    $this->eventManager->dispatch('webpay_commit_success', ['order' => $order, 'message' => $message, 'paymentStatus' => $paymentStatus]);
+
                     return $this->resultRedirectFactory->create()->setPath('checkout/onepage/success');
                     
                 } else {
@@ -108,6 +113,8 @@ class CommitWebpayM22 extends \Magento\Framework\App\Action\Action
 
                     $message = $this->getRejectMessage($this->commitResponseToArray($transactionResult));
                     $this->messageManager->addError(__($message));
+
+                    $this->eventManager->dispatch('webpay_commit_error', ['order' => $order, 'message' => $message, 'paymentStatus' => $paymentStatus]);
                     
                     return $this->resultRedirectFactory->create()->setPath('checkout/cart');
                 }
@@ -121,6 +128,8 @@ class CommitWebpayM22 extends \Magento\Framework\App\Action\Action
                     $message = $this->getSuccessMessage($transactionResult);
                     $this->messageManager->addSuccess(__($message));
                     
+                    $this->eventManager->dispatch('webpay_commit_success', ['order' => $order, 'message' => $message, 'paymentStatus' => $paymentStatus]);
+
                     return $this->resultRedirectFactory->create()->setPath('checkout/onepage/success');
                     
                 } elseif ($paymentStatus == WebpayOrderData::PAYMENT_STATUS_FAILED) { {
@@ -128,6 +137,8 @@ class CommitWebpayM22 extends \Magento\Framework\App\Action\Action
                         $message = $this->getRejectMessage($transactionResult);
                         $this->messageManager->addError(__($message));
                         
+                        $this->eventManager->dispatch('webpay_commit_error', ['order' => $order, 'message' => $message, 'paymentStatus' => $paymentStatus]);
+
                         return $this->resultRedirectFactory->create()->setPath('checkout/cart');
                     }
                 }
