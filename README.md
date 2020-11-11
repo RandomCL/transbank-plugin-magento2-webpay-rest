@@ -44,6 +44,7 @@ El plugin depende de las siguientes librerías:
 ## Instalación 
 
 **NOTA**: El plugin se puede instalar de dos formas desde packagist.org o directamente desde el repositorio git.
+
 **NOTA 2 IMPORTANTE**: Solo instalar con la opción 2, ya que este FORK no ha sido aceptado aún en el repo oficial
 
 1. Ir a la carpeta base de Magento2
