@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/TransbankDevelopers/transbank-plugin-magento2-webpay.svg?branch=master)](https://travis-ci.org/TransbankDevelopers/transbank-plugin-magento2-webpay)
 
 # Transbank Magento2 Webpay Plugin
-Plugin oficial de Webpay para Magento2
+FORK por RANDOM ERP del Plugin oficial de Webpay para Magento2
 
 ## Descripción
 
@@ -44,6 +44,7 @@ El plugin depende de las siguientes librerías:
 ## Instalación 
 
 **NOTA**: El plugin se puede instalar de dos formas desde packagist.org o directamente desde el repositorio git.
+**NOTA 2 IMPORTANTE**: Solo instalar con la opción 2, ya que este FORK no ha sido aceptado aún en el repo oficial
 
 1. Ir a la carpeta base de Magento2
 
@@ -55,10 +56,11 @@ El plugin depende de las siguientes librerías:
    Esperar mientras las dependencias son actualizadas.
 
 3. [Opción 2] Ejecutar los siguientes comandos para instalar el plugin directamente desde git:
-
+    **NOTA**: La url ha sido modificada y se incluyó la de este repositorio.
+    
     ```bash
-    composer config repositories.transbankwebpay vcs https://github.com/TransbankDevelopers/transbank-plugin-magento2-webpay.git
-	composer require transbank/webpay-magento2:dev-master
+    composer config repositories.transbankwebpay vcs https://github.com/RandomCL/transbank-plugin-magento2-webpay-rest.git
+	composer require transbank/webpay-magento2-rest:dev-master
     ```
    Esperar mientras las dependencias son actualizadas.
 
