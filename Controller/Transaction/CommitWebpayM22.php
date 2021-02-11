@@ -259,10 +259,10 @@ class CommitWebpayM22 extends \Magento\Framework\App\Action\Action
                 <b>Order de Compra: </b> {$transactionResult['buyOrder']}<br>
                 <b>Fecha de la Transacci&oacute;n: </b>" . date('d-m-Y', strtotime($transactionResult['transactionDate'])) . "<br>
                 <b>Hora de la Transacci&oacute;n: </b>" . date('H:i:s', strtotime($transactionResult['transactionDate'])) . "<br>
-                <b>Tarjeta: </b>**** **** **** {$transactionResult['cardDetail']['cardNumber']}<br>
+                <b>Tarjeta: </b>**** **** **** {$transactionResult['cardDetail']['card_number']}<br>
                 <b>Mensaje de Rechazo: </b>{$transactionResult['responseDescription']}
             </p>";
-            
+
             return $message;
         } else {
             if (isset($transactionResult['error'])) {
@@ -287,7 +287,7 @@ class CommitWebpayM22 extends \Magento\Framework\App\Action\Action
     protected function getOrder($orderId)
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        return $objectManager->create('\Magento\Sales\Model\Order')->load($orderId);
+        return $objectManager->create('\Magento\Sales\Model\Order')->loadByIncrementId($orderId);
     }
     /**
      * @param $tokenWs
